@@ -4,10 +4,11 @@ __pycache__/
 utils/__pycache__/
 checkpoints/
 data/
+venv/
 
-reports/
 eval_runs/
 logs/
 result/
 result_pretrained/
 snapshots/
+Crescent-images-dataset/

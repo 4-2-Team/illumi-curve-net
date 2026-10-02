@@ -1,0 +1,3 @@
+[submodule "Crescent-images-dataset"]
+	path = Crescent-images-dataset
+	url = https://github.com/4-2-Team/Crescent-images-dataset.git
