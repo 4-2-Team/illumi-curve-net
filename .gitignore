@@ -4,3 +4,10 @@ __pycache__/
 utils/__pycache__/
 checkpoints/
 data/
+
+reports/
+eval_runs/
+logs/
+result/
+result_pretrained/
+snapshots/

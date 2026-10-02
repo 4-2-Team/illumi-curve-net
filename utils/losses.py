@@ -102,6 +102,39 @@ class L_exp(nn.Module):
         d = torch.mean(torch.pow(mean- torch.FloatTensor([self.mean_val]).cuda(),2))
         return d
 
+class L_exp_masked(nn.Module):
+    """Exposure loss restricted to patches that actually contain scene content.
+
+    Plain L_exp pulls every patch's mean brightness toward mean_val, which
+    assumes the whole frame should end up well-lit. For a mostly-black-sky
+    scene (e.g. a moon frame) that fights the background: most patches are
+    sky and have nothing to "expose". Here each patch is compared against the
+    same input image's own brightest patch, and only patches at least
+    content_frac of that peak (i.e. the illuminated subject, not empty sky)
+    are pulled toward mean_val.
+    """
+    def __init__(self, patch_size=16, mean_val=0.6, content_frac=0.15):
+        super(L_exp_masked, self).__init__()
+        self.pool = nn.AvgPool2d(patch_size)
+        self.mean_val = mean_val
+        self.content_frac = content_frac
+
+    def forward(self, enhanced, img_lowlight):
+        enhanced_gray = torch.mean(enhanced, 1, keepdim=True)
+        input_gray = torch.mean(img_lowlight, 1, keepdim=True)
+
+        enhanced_patch = self.pool(enhanced_gray)
+        input_patch = self.pool(input_gray)
+
+        b = input_patch.shape[0]
+        max_patch = input_patch.view(b, -1).max(dim=1)[0].view(b, 1, 1, 1)
+        mask = (input_patch >= self.content_frac * max_patch).float()
+
+        diff_sq = torch.pow(enhanced_patch - self.mean_val, 2) * mask
+        denom = mask.view(b, -1).sum(dim=1).clamp(min=1.0)
+        per_image = diff_sq.view(b, -1).sum(dim=1) / denom
+        return per_image.mean()
+
 class L_TV(nn.Module):
     """Total Variation loss to ensure smoothness."""
     def __init__(self,TVLoss_weight=1):
