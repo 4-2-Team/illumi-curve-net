@@ -1,6 +1,8 @@
 
 # IllumiCurveNet: Low-Light Image Enhancement for Lunar Permanently Shadowed Regions Using a Self-Guided Loss Framework
 
+> **Provenance:** Originally created by [Ashish Prajapati](https://github.com/JustSurWHYving) ([JustSurWHYving/illumi-curve-net](https://github.com/JustSurWHYving/illumi-curve-net)), released under the MIT License (see [LICENSE](LICENSE)). This copy is used and extended for research purposes (fine-tuning experiments, evaluation reports in [`reports/`](reports/)) — see the git history for the original vs. derivative commits.
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Architecture](#architecture)
